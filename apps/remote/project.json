@@ -1,23 +1,23 @@
 {
   "projectType": "application",
-  "sourceRoot": "apps/host/src",
+  "sourceRoot": "apps/remote/src",
   "prefix": "mfe-post",
   "targets": {
     "build": {
       "executor": "@nrwl/angular:webpack-browser",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/apps/host",
-        "index": "apps/host/src/index.html",
-        "main": "apps/host/src/main.ts",
-        "polyfills": "apps/host/src/polyfills.ts",
-        "tsConfig": "apps/host/tsconfig.app.json",
+        "outputPath": "dist/apps/remote",
+        "index": "apps/remote/src/index.html",
+        "main": "apps/remote/src/main.ts",
+        "polyfills": "apps/remote/src/polyfills.ts",
+        "tsConfig": "apps/remote/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
-        "assets": ["apps/host/src/favicon.ico", "apps/host/src/assets"],
-        "styles": ["apps/host/src/styles.scss"],
+        "assets": ["apps/remote/src/favicon.ico", "apps/remote/src/assets"],
+        "styles": ["apps/remote/src/styles.scss"],
         "scripts": [],
         "customWebpackConfig": {
-          "path": "apps/host/webpack.config.js"
+          "path": "apps/remote/webpack.config.js"
         }
       },
       "configurations": {
@@ -36,13 +36,13 @@
           ],
           "fileReplacements": [
             {
-              "replace": "apps/host/src/environments/environment.ts",
-              "with": "apps/host/src/environments/environment.prod.ts"
+              "replace": "apps/remote/src/environments/environment.ts",
+              "with": "apps/remote/src/environments/environment.prod.ts"
             }
           ],
           "outputHashing": "all",
           "customWebpackConfig": {
-            "path": "apps/host/webpack.prod.config.js"
+            "path": "apps/remote/webpack.prod.config.js"
           }
         },
         "development": {
@@ -57,39 +57,54 @@
       "defaultConfiguration": "production"
     },
     "serve": {
-      "executor": "@nrwl/angular:module-federation-dev-server",
+      "executor": "@nrwl/angular:webpack-server",
       "configurations": {
         "production": {
-          "browserTarget": "host:build:production"
+          "browserTarget": "remote:build:production"
         },
         "development": {
-          "browserTarget": "host:build:development"
+          "browserTarget": "remote:build:development"
         }
       },
       "defaultConfiguration": "development",
       "options": {
-        "port": 5000,
-        "publicHost": "http://localhost:5000"
+        "port": 5001,
+        "publicHost": "http://localhost:5001"
       }
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
-        "browserTarget": "host:build"
+        "browserTarget": "remote:build"
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "options": {
-        "lintFilePatterns": ["apps/host/**/*.ts", "apps/host/**/*.html"]
+        "lintFilePatterns": ["apps/remote/**/*.ts", "apps/remote/**/*.html"]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/apps/host"],
+      "outputs": ["coverage/apps/remote"],
       "options": {
-        "jestConfig": "apps/host/jest.config.ts",
+        "jestConfig": "apps/remote/jest.config.ts",
         "passWithNoTests": true
+      }
+    },
+    "serve-static": {
+      "executor": "@nrwl/angular:file-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "remote:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "remote:build:development"
+        },
+        "production": {
+          "buildTarget": "remote:build:production"
+        }
       }
     }
   },
